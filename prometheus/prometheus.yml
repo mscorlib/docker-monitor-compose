@@ -33,6 +33,11 @@ scrape_configs:
     honor_labels: true
     static_configs:
       - targets: ['push-gateway:9091']
+  
+  - job_name: 'nacos'
+    metrics_path: '/nacos/actuator/prometheus'
+    static_configs:
+      - targets: ['nacos:8848']
 
 
 alerting:

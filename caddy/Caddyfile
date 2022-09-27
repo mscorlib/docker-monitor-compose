@@ -15,3 +15,7 @@
         header_down Set-Cookie "/" "/"
     }
 }
+
+:8848 {
+    reverse_proxy nacos:8848
+}

@@ -5,13 +5,13 @@ networks:
     driver: bridge
 
 volumes:
-    prometheus_data: {}
-    grafana_data: {}
+  prometheus_data: {}
+  grafana_data: {}
 
 services:
   #promethues, alter and push service
   prometheus:
-    image: prom/prometheus:v2.37.1
+    image: prom/prometheus:${PROMETHEUS_VERSION}
     container_name: prometheus
     restart: unless-stopped
     volumes:
@@ -29,9 +29,9 @@ services:
       - monitoring
     labels:
       org.label-schema.group: "monitoring"
-  
+
   alert-manager:
-    image: prom/alertmanager:v0.24.0
+    image: prom/alertmanager:${ALERTMANAGER_VERSION}
     container_name: alert-manager
     restart: unless-stopped
     volumes:
@@ -45,9 +45,9 @@ services:
       - monitoring
     labels:
       org.label-schema.group: "monitoring"
-  
+
   push-gateway:
-    image: prom/pushgateway:v1.4.3
+    image: prom/pushgateway:${PUSHGATEWAY_VERSION}
     container_name: push-gateway
     restart: unless-stopped
     expose:
@@ -59,13 +59,13 @@ services:
 
   #grafana dashboard
   grafana:
-    image: grafana/grafana:7.5.17
+    image: grafana/grafana:${GRAFANA_VERSION}
     container_name: grafana
     restart: unless-stopped
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
-    depends_on:  
+    depends_on:
       - prometheus
     expose:
       - 3000
@@ -73,10 +73,27 @@ services:
       - monitoring
     labels:
       org.label-schema.group: "monitoring"
-  
+
+  nacos:
+    image: nacos/nacos-server:${NACOS_VERSION}
+    container_name: nacos-standalone
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - MODE=standalone
+    volumes:
+      - ./nacos/standalone-logs/:/home/nacos/logs
+      - ./nacos/application.properties:/home/nacos/conf/application.properties
+    expose:
+      - 8848
+      - 9848
+    networks:
+      - monitoring
+    labels:
+      org.label-schema.group: "monitoring"
+
   #export as a web service by caddy
   caddy:
-    image: caddy:2.6.1-alpine
+    image: caddy:${CADDY_VERSION}
     container_name: caddy
     restart: unless-stopped
     ports:
@@ -84,16 +101,17 @@ services:
       - "9090:9090"
       - "9093:9093"
       - "9091:9091"
+      - "8848:8848"
     volumes:
       - ./caddy:/etc/caddy
     networks:
       - monitoring
     labels:
       org.label-schema.group: "monitoring"
-  
+
   #node & container monitoring
   cadvisor:
-    image: zcube/cadvisor:v0.45.0
+    image: zcube/cadvisor:${CADVISOR_VERSION}
     container_name: cadvisor
     volumes:
       - /:/rootfs:ro
@@ -110,9 +128,9 @@ services:
       mode: global
     labels:
       org.label-schema.group: "monitoring"
-  
+
   node-exporter:
-    image: prom/node-exporter:v1.4.0
+    image: prom/node-exporter:${NODE_EXPORTER_VERSION}
     container_name: node-exporter
     restart: unless-stopped
     volumes:
