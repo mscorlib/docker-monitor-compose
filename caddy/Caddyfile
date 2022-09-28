@@ -23,3 +23,7 @@
 :8091 {
     reverse_proxy seata-server:8091
 }
+
+:5432 {
+    reverse_proxy pgadmin4:8080
+}

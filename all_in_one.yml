@@ -7,8 +7,14 @@ networks:
     external: true
 
 volumes:
-  prometheus_data: {}
-  grafana_data: {}
+  prometheus_data:
+    external: true
+  grafana_data: 
+    external: true
+  pgsql_data:
+    external: true
+  pgadmin_data:
+    external: true
 
 services:
   #promethues, alter and push service
@@ -102,6 +108,33 @@ services:
       - STORE_MODE=file
     networks:
       - dev_springcloud
+  
+  pgsql:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: pgsql
+    restart: always
+    volumes:
+      - pgsql_data:/var/lib/postgresql/data
+    networks:
+      - dev_springcloud
+    expose:
+     - 5432
+    environment:
+      POSTGRES_PASSWORD: 123123
+
+  pgadmin:
+    image: dpage/pgadmin4:${PGADMIN_VERSION}
+    container_name: pgadmin4
+    restart: always
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - dev_springcloud
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mscorlib@live.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    expose:
+      - 8080
 
   #export as a web service by caddy
   caddy:
@@ -115,6 +148,7 @@ services:
       # - "9091:9091"
       - "8848:8848"
       - "8091:8091"
+      - "5432:5432"
     volumes:
       - ./caddy:/etc/caddy
     networks:

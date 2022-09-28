@@ -1,0 +1,36 @@
+version: '3.8'
+
+networks:
+  dev_springcloud:
+    external: true
+    
+volumes:
+  pgsql_data:
+    external: true
+
+services:
+  pgsql:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: pgsql
+    restart: always
+    volumes:
+      - pgsql_data:/var/lib/postgresql/data
+    networks:
+      - dev_springcloud
+    expose:
+     - 5432
+    environment:
+      POSTGRES_PASSWORD: 123123
+
+  pgadmin:
+    image: dpage/pgadmin4:${PGADMIN_VERSION}
+    container_name: pgadmin4
+    restart: always
+    networks:
+      - dev_springcloud
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mscorlib@live.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    expose:
+      - 8080
+    
