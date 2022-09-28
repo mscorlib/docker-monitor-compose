@@ -1,8 +1,10 @@
 version: '3.8'
 
 networks:
-  monitoring:
-    driver: bridge
+  dev_monitoring:
+    external: true
+  dev_springcloud:
+    external: true
 
 volumes:
   prometheus_data: {}
@@ -26,7 +28,7 @@ services:
     expose:
       - 9090
     networks:
-      - monitoring
+      - dev_monitoring
     labels:
       org.label-schema.group: "monitoring"
 
@@ -42,7 +44,7 @@ services:
     expose:
       - 9093
     networks:
-      - monitoring
+      - dev_monitoring
     labels:
       org.label-schema.group: "monitoring"
 
@@ -53,7 +55,7 @@ services:
     expose:
       - 9091
     networks:
-      - monitoring
+      - dev_monitoring
     labels:
       org.label-schema.group: "monitoring"
 
@@ -70,7 +72,7 @@ services:
     expose:
       - 3000
     networks:
-      - monitoring
+      - dev_monitoring
     labels:
       org.label-schema.group: "monitoring"
 
@@ -87,9 +89,19 @@ services:
       - 8848
       - 9848
     networks:
-      - monitoring
-    labels:
-      org.label-schema.group: "monitoring"
+      - dev_springcloud
+  
+  seata-server:
+    image: seataio/seata-server:${SEATA_SERVER_VERSION}
+    hostname: seata-server
+    expose:
+      - 8091
+      - 7091
+    environment:
+      - SEATA_PORT=8091
+      - STORE_MODE=file
+    networks:
+      - dev_springcloud
 
   #export as a web service by caddy
   caddy:
@@ -99,13 +111,15 @@ services:
     ports:
       - "3000:3000"
       - "9090:9090"
-      - "9093:9093"
-      - "9091:9091"
+      # - "9093:9093"
+      # - "9091:9091"
       - "8848:8848"
+      - "8091:8091"
     volumes:
       - ./caddy:/etc/caddy
     networks:
-      - monitoring
+      - dev_monitoring
+      - dev_springcloud
     labels:
       org.label-schema.group: "monitoring"
 
@@ -123,7 +137,7 @@ services:
     expose:
       - 8080
     networks:
-      - monitoring
+      - dev_monitoring
     deploy:
       mode: global
     labels:
@@ -145,7 +159,7 @@ services:
     expose:
       - 9100
     networks:
-      - monitoring
+      - dev_monitoring
     deploy:
       mode: global
     labels:

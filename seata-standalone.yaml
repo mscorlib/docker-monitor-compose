@@ -1,0 +1,17 @@
+version: "3.8"
+
+networks:
+  monitoring:
+    driver: bridge
+
+seata-server:
+    image: seataio/seata-server:${SEATA_SERVER_VERSION}
+    hostname: seata-server
+    expose:
+      - 8091
+      - 7091
+    environment:
+      - SEATA_PORT=8091
+      - STORE_MODE=file
+    networks:
+      - monitoring

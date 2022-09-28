@@ -3,9 +3,25 @@
 #使用说明
 usage(){
     echo "useage: sh run.sh [all|node] [up|down|restart]"
+    
+}
+
+check_network(){
+    docker network ls|grep -q "dev_monitoring"
+    if [ $? != 0 ] ;then
+    echo "create network: dev_monitoring."
+        docker network create dev_monitoring
+    fi
+
+    docker network ls|grep -q "dev_springcloud"
+    if [ $? != 0 ] ;then
+        echo "create network: dev_springcloud."
+        docker network create dev_springcloud
+    fi
 }
 
 all_up(){
+    check_network
     docker compose -f all_in_one.yml up -d
 }
 
