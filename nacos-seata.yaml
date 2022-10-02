@@ -6,19 +6,9 @@ networks:
   dev_springcloud:
     external: true
 
-volumes:
-  prometheus_data:
-    external: true
-  grafana_data: 
-    external: true
-  pgsql_data:
-    external: true
-  pgadmin_data:
-    external: true
-
 nacos:
     image: nacos/nacos-server:${NACOS_VERSION}
-    container_name: nacos-standalone
+    container_name: nacos
     environment:
       - PREFER_HOST_MODE=hostname
       - MODE=standalone
@@ -33,7 +23,7 @@ nacos:
   
   seata-server:
     image: seataio/seata-server:${SEATA_SERVER_VERSION}
-    hostname: seata-server
+    hostname: seata
     expose:
       - 8091
       - 7091

@@ -21,7 +21,7 @@
 }
 
 :8091 {
-    reverse_proxy seata-server:8091
+    reverse_proxy seata:8091
 }
 
 :5432 {

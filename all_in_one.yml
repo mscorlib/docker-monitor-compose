@@ -84,7 +84,7 @@ services:
 
   nacos:
     image: nacos/nacos-server:${NACOS_VERSION}
-    container_name: nacos-standalone
+    container_name: nacos
     environment:
       - PREFER_HOST_MODE=hostname
       - MODE=standalone
@@ -99,7 +99,7 @@ services:
   
   seata-server:
     image: seataio/seata-server:${SEATA_SERVER_VERSION}
-    hostname: seata-server
+    hostname: seata
     expose:
       - 8091
       - 7091
@@ -154,8 +154,6 @@ services:
     networks:
       - dev_monitoring
       - dev_springcloud
-    labels:
-      org.label-schema.group: "monitoring"
 
   #node & container monitoring
   cadvisor:
