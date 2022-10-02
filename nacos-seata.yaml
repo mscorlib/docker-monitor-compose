@@ -1,0 +1,44 @@
+version: '3.8'
+
+networks:
+  dev_monitoring:
+    external: true
+  dev_springcloud:
+    external: true
+
+volumes:
+  prometheus_data:
+    external: true
+  grafana_data: 
+    external: true
+  pgsql_data:
+    external: true
+  pgadmin_data:
+    external: true
+
+nacos:
+    image: nacos/nacos-server:${NACOS_VERSION}
+    container_name: nacos-standalone
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - MODE=standalone
+    volumes:
+      - ./nacos/standalone-logs/:/home/nacos/logs
+      - ./nacos/application.properties:/home/nacos/conf/application.properties
+    expose:
+      - 8848
+      - 9848
+    networks:
+      - dev_springcloud
+  
+  seata-server:
+    image: seataio/seata-server:${SEATA_SERVER_VERSION}
+    hostname: seata-server
+    expose:
+      - 8091
+      - 7091
+    environment:
+      - SEATA_PORT=8091
+      - STORE_MODE=file
+    networks:
+      - dev_springcloud

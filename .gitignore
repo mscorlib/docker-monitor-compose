@@ -2,3 +2,5 @@
 .vs/
 .vscode/
 .idea/
+*.log
+nacos/standalone-logs
