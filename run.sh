@@ -2,7 +2,7 @@
 
 #使用说明
 usage(){
-    echo "useage: sh run.sh [all|node] [up|down|restart]"
+    echo "useage: sh run.sh [all|ali|caddy|node] [up|down|restart]"
     
 }
 
@@ -74,6 +74,15 @@ ali_down(){
     docker compose -f nacos-seata.yaml -p "spring-cloud-alibaba" down
 }
 
+caddy_up(){
+    check_springcloud_precondition
+    docker compose -f caddy.yaml -p "caddy" up -d
+}
+
+caddy_down(){
+    docker compose -f caddy.yaml -p "caddy" down
+}
+
 all(){
     case "$1" in
     "up"|"restart")
@@ -96,6 +105,17 @@ ali(){
     esac 
 }
 
+caddy(){
+   case "$1" in
+    "up"|"restart")
+        caddy_up
+    ;;
+    "down")
+        caddy_down
+    ;;
+    esac 
+}
+
 node(){
     case "$1" in
     "up"|"restart")
@@ -113,6 +133,9 @@ case "$1" in
 ;;
 "ali")
     ali $2
+;;
+"caddy")
+    caddy $2
 ;;
 "node")
     node $2

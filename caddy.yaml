@@ -1,0 +1,27 @@
+version: '3.8'
+
+networks:
+  dev_monitoring:
+    external: true
+  dev_springcloud:
+    external: true
+
+services:
+  #export as a web service by caddy
+  caddy:
+    image: caddy:${CADDY_VERSION}
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "9090:9090"
+      # - "9093:9093"
+      # - "9091:9091"
+      - "8848:8848"
+      - "8091:8091"
+      - "5432:5432"
+    volumes:
+      - ./caddy:/etc/caddy
+    networks:
+      - dev_monitoring
+      - dev_springcloud
