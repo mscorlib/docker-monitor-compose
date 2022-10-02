@@ -65,6 +65,15 @@ node_down(){
     docker compose -f node_exporter.yml -p "node-exporter" down
 }
 
+ali_up(){
+    check_springcloud_precondition
+    docker compose -f nacos-seata.yaml -p "spring-cloud-alibaba" up -d
+}
+
+ali_down(){
+    docker compose -f nacos-seata.yaml -p "spring-cloud-alibaba" down
+}
+
 all(){
     case "$1" in
     "up"|"restart")
@@ -74,6 +83,17 @@ all(){
         all_down
     ;;
     esac
+}
+
+ali(){
+   case "$1" in
+    "up"|"restart")
+        ali_up
+    ;;
+    "down")
+        ali_down
+    ;;
+    esac 
 }
 
 node(){
@@ -90,6 +110,9 @@ node(){
 case "$1" in
 "all")
     all $2
+;;
+"ali")
+    ali $2
 ;;
 "node")
     node $2

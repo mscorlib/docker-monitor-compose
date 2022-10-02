@@ -6,7 +6,8 @@ networks:
   dev_springcloud:
     external: true
 
-nacos:
+services:
+  nacos:
     image: nacos/nacos-server:${NACOS_VERSION}
     container_name: nacos
     environment:
@@ -23,7 +24,7 @@ nacos:
   
   seata-server:
     image: seataio/seata-server:${SEATA_SERVER_VERSION}
-    hostname: seata
+    container_name: seata
     expose:
       - 8091
       - 7091
