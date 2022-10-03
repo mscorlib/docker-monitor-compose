@@ -91,9 +91,12 @@ services:
     volumes:
       - ./nacos/standalone-logs/:/home/nacos/logs
       - ./nacos/application.properties:/home/nacos/conf/application.properties
-    expose:
-      - 8848
-      - 9848
+    # expose:
+    #   - 8848
+    #   - 9848
+    ports:
+      - "8848:8848"
+      - "9848:9848"
     networks:
       - dev_springcloud
   
@@ -146,7 +149,8 @@ services:
       - "9090:9090"
       # - "9093:9093"
       # - "9091:9091"
-      - "8848:8848"
+      # - "8848:8848"
+      # - "9848:9848"
       - "8091:8091"
       - "5432:5432"
     volumes:

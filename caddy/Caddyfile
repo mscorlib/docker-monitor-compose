@@ -16,9 +16,14 @@
     }
 }
 
-:8848 {
-    reverse_proxy nacos:8848
-}
+# :8848 {
+#     reverse_proxy nacos:8848
+# }
+
+# :9848 {
+#     reverse_proxy nacos:9848 
+# }
+
 
 :8091 {
     reverse_proxy seata:8091
